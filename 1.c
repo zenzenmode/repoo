@@ -1,33 +1,52 @@
-#include <stdio.h>
-int n = 5;
-int p[10] = {3, 3, 2, 5, 1};
-int w[10] = {10, 15, 10, 12, 8};
-int W = 10;
-int main(){
-   int cur_w;
-   float tot_v;
-   int i, maxi;
-   int used[10];
-   for (i = 0; i < n; ++i)
-      used[i] = 0;
-   cur_w = W;
-   while (cur_w > 0) {
-      maxi = -1;
-      for (i = 0; i < n; ++i)
-         if ((used[i] == 0) &&
-               ((maxi == -1) || ((float)w[i]/p[i] > (float)w[maxi]/p[maxi])))
-            maxi = i;
-      used[maxi] = 1;
-      cur_w -= p[maxi];
-      tot_v += w[maxi];
-      if (cur_w >= 0)
-         printf("Added object %d (%d, %d) completely in the bag. Space left: %d.\n", maxi + 1, w[maxi], p[maxi], cur_w);
-      else {
-         printf("Added %d%% (%d, %d) of object %d in the bag.\n", (int)((1 + (float)cur_w/p[maxi]) * 100), w[maxi], p[maxi], maxi + 1);
-         tot_v -= w[maxi];
-         tot_v += (1 + (float)cur_w/p[maxi]) * w[maxi];
-      }
-   }
-   printf("Filled the bag with objects worth %.2f.\n", tot_v);
-   return 0;
+#include<stdio.h>
+int main()
+{
+     float weight[50], profit[50], ratio[50], Totalvalue = 0, temp, capacity, amount;
+     int n, i, j;
+     printf("Enter the number of items :");
+     scanf("%d", &n);   
+    for (i = 0; i < n; i++)
+    {
+        printf("Enter Weight and Profit for item no. %d :\n", i+1);
+        scanf("%f %f", &weight[i], &profit[i]);
+    } 
+    printf("Enter the capacity of knapsack :\n");
+    scanf("%f", &capacity);
+     
+     for(i = 0; i < n; i++)
+         ratio[i] = profit[i] / weight[i];
+         
+    for (i = 0; i < n; i++) 
+      for (j = i + 1; j < n; j++) 
+         if (ratio[i] < ratio[j]) 
+        {
+            temp = ratio[j];
+            ratio[j] = ratio[i];
+            ratio[i] = temp;
+ 
+            temp = weight[j];
+            weight[j] = weight[i];
+            weight[i] = temp;
+ 
+            temp = profit[j];
+            profit[j] = profit[i];
+            profit[i] = temp;
+         }
+    
+     printf("Knapsack problems using Greedy Algorithm:\n");
+     for (i = 0; i < n; i++) 
+     {
+         if (weight[i] > capacity)
+             break;
+         else 
+         {
+             Totalvalue = Totalvalue + profit[i];
+             capacity = capacity - weight[i];
+         }
+     } 
+     if (i < n)
+         Totalvalue = Totalvalue + (ratio[i] * capacity);
+         
+     printf("\nThe maximum value is :%f\n", Totalvalue);     
+     return 0;
 }
