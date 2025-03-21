@@ -1,42 +1,55 @@
-// A Naive recursive implementation of LCS problem
 #include <stdio.h>
 #include <string.h>
 
-int max(int x, int y) {
-      return x > y ? x : y; 
+// Function to find LCS and print the LCS string
+void printLCS(char *X, char *Y, int m, int n) {
+    int dp[m+1][n+1];
+
+    // Build the DP table
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (i == 0 || j == 0)
+                dp[i][j] = 0;
+            else if (X[i-1] == Y[j-1])
+                dp[i][j] = 1 + dp[i-1][j-1];
+            else
+                dp[i][j] = (dp[i-1][j] > dp[i][j-1]) ? dp[i-1][j] : dp[i][j-1];
+        }
+    }
+
+    // Length of LCS
+    int lcs_length = dp[m][n];
+
+    // Create an array to store the LCS string
+    char lcs[lcs_length + 1];
+    lcs[lcs_length] = '\0'; // Null terminate
+
+    // Backtrack to find the LCS string
+    int i = m, j = n, index = lcs_length - 1;
+    while (i > 0 && j > 0) {
+        if (X[i - 1] == Y[j - 1]) {
+            lcs[index] = X[i - 1]; // Store character in LCS
+            i--; j--; index--;     // Move diagonally up-left
+        } else if (dp[i - 1][j] > dp[i][j - 1])
+            i--; // Move up
+        else
+            j--; // Move left
+    }
+
+    // Print the LCS length and string
+    printf("Length of LCS: %d\n", lcs_length);
+    printf("LCS String: %s\n", lcs);
 }
 
-// Returns length of LCS for s1[0..m-1], s2[0..n-1]
-int lcsRec(char s1[], char s2[], int m, int n) {
-
-    // Base case: If either string is empty, the length of LCS is 0
-    if (m == 0 || n == 0)
-        return 0;
-
-    // If the last characters of both substrings match
-    if (s1[m - 1] == s2[n - 1])
-
-        // Include this character in LCS and recur for remaining substrings
-        return 1 + lcsRec(s1, s2, m - 1, n - 1);
-
-    else
-        // If the last characters do not match
-        // Recur for two cases:
-        // 1. Exclude the last character of S1 
-        // 2. Exclude the last character of S2 
-        // Take the maximum of these two recursive calls
-        return max(lcsRec(s1, s2, m, n - 1), lcsRec(s1, s2, m - 1, n));
-}
-int lcs(char s1[],char s2[]){
-    int m = strlen(s1);
-    int n = strlen(s2);
-    
-    return lcsRec(s1,s2,m,n);
-}
-
+// Driver code
 int main() {
-    char s1[] = "AGGTAB";
-    char s2[] = "GXTXAYB";
-    printf("%d\n", lcs(s1, s2));
+    char X[] = "AGGTAB";
+    char Y[] = "GXTXAYB";
+
+    int m = strlen(X);
+    int n = strlen(Y);
+
+    printLCS(X, Y, m, n);
+
     return 0;
 }
