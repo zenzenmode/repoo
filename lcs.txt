@@ -1,0 +1,85 @@
+Algorithm for Longest Common Subsequence (LCS) using Dynamic Programming
+
+Input:
+
+Two strings X and Y of lengths m and n respectively.
+
+Output:
+
+The length of the longest common subsequence and the LCS string.
+
+
+---
+
+Algorithm Steps:
+
+Step 1: Initialize the DP Table
+
+1. Create a 2D array dp[m+1][n+1], where dp[i][j] will store the LCS length of X[0..i-1] and Y[0..j-1].
+
+
+2. Initialize dp[i][0] = 0 and dp[0][j] = 0 for all i and j (since an empty string has LCS length 0).
+
+
+
+Step 2: Fill the DP Table
+
+3. Use nested loops to fill the table:
+
+If X[i-1] == Y[j-1]:
+dp[i][j] = 1 + dp[i-1][j-1] (characters match, extend LCS)
+
+Else:
+dp[i][j] = max(dp[i-1][j], dp[i][j-1]) (take the longer LCS from the previous subproblems)
+
+
+
+
+Step 3: Backtrack to Find LCS String
+
+4. Initialize i = m, j = n, and index = dp[m][n] - 1.
+
+
+5. Create a character array lcs[index+1] to store the LCS (set lcs[index+1] = '\0' for termination).
+
+
+6. Backtrack from dp[m][n] to dp[0][0]:
+
+If X[i-1] == Y[j-1]:
+
+Store X[i-1] in lcs[index]
+
+Move diagonally (i--, j--, index--)
+
+
+Else:
+
+If dp[i-1][j] > dp[i][j-1], move up (i--).
+
+Otherwise, move left (j--).
+
+
+
+
+
+Step 4: Print LCS Length and LCS String
+
+7. Print dp[m][n] as the length of LCS.
+
+
+8. Print the lcs string as the LCS itself.
+
+
+
+
+---
+
+Complexity Analysis:
+
+Time Complexity:  (filling the DP table and backtracking)
+
+Space Complexity:  (for storing the DP table)
+
+
+Let me know if you need further explanations!
+
